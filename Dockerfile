@@ -28,6 +28,7 @@ RUN cd $(mktemp -d) && \
 
 FROM docker.io/library/alpine:3
 
+ARG BINDIR
 COPY --from=wget ${BINDIR} ${BINDIR}/
 
 USER 65534:65534
