@@ -30,8 +30,7 @@ FROM docker.io/library/alpine:3
 
 COPY --from=wget ${BINDIR} ${BINDIR}/
 
-RUN adduser -Du 1000 nerd
-USER nerd:nerd
-WORKDIR /home/nerd
+USER 65534:65534
+WORKDIR /tmp
 
 CMD ["/bin/sh"]
