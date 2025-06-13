@@ -6,6 +6,7 @@ ARG KUBECTL="1.33.1"
 ARG HELM="3.18.2"
 ARG FLUX="2.6.1"
 ARG CILIUM="0.18.4"
+ARG K9S="0.50.6"
 
 RUN cd $(mktemp -d) && \
     wget -qO kubectl https://dl.k8s.io/release/v${KUBECTL}/bin/linux/${TARGETARCH}/kubectl && \
@@ -22,6 +23,10 @@ RUN cd $(mktemp -d) && \
     wget -qO cilium.tar.gz https://github.com/cilium/cilium-cli/releases/download/v${CILIUM}/cilium-linux-${TARGETARCH}.tar.gz && \
     tar -xf cilium.tar.gz && \
     install -o root -g root -m 0755 cilium /usr/local/bin/
+RUN cd $(mktemp -d) && \
+    wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S}/k9s_Linux_${TARGETARCH}.tar.gz && \
+    tar -xf k9s.tar.gz && \
+    install -o root -g root -m 0755 k9s /usr/local/bin/
 
 FROM docker.io/library/alpine:3
 

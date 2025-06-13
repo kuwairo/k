@@ -9,6 +9,7 @@ At the moment, the following tools are included in the image:
 - `helm`
 - `flux`
 - `cilium`
+- `k9s`
 
 ## Supported platforms
 
