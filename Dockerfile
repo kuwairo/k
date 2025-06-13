@@ -1,0 +1,36 @@
+FROM docker.io/library/alpine:3 AS wget
+
+ARG GOARCH="arm64"
+ARG BINDIR="/usr/local/bin"
+ARG BINOPT="-o root -g root -m 0755"
+
+ARG KUBECTL="1.33.1"
+ARG HELM="3.18.2"
+ARG FLUX="2.6.1"
+ARG CILIUM="0.18.4"
+
+RUN cd $(mktemp -d) && \
+    wget -qO kubectl https://dl.k8s.io/release/v${KUBECTL}/bin/linux/${GOARCH}/kubectl && \
+    install ${BINOPT} kubectl ${BINDIR}/
+RUN cd $(mktemp -d) && \
+    wget -qO helm.tar.gz https://get.helm.sh/helm-v${HELM}-linux-${GOARCH}.tar.gz && \
+    tar -xf helm.tar.gz && \
+    install ${BINOPT} linux-${GOARCH}/helm ${BINDIR}/
+RUN cd $(mktemp -d) && \
+    wget -qO flux.tar.gz https://github.com/fluxcd/flux2/releases/download/v${FLUX}/flux_${FLUX}_linux_${GOARCH}.tar.gz && \
+    tar -xf flux.tar.gz && \
+    install ${BINOPT} flux ${BINDIR}/
+RUN cd $(mktemp -d) && \
+    wget -qO cilium.tar.gz https://github.com/cilium/cilium-cli/releases/download/v${CILIUM}/cilium-linux-${GOARCH}.tar.gz && \
+    tar -xf cilium.tar.gz && \
+    install ${BINOPT} cilium ${BINDIR}/
+
+FROM docker.io/library/alpine:3
+
+COPY --from=wget ${BINDIR} ${BINDIR}/
+
+RUN adduser -Du 1000 nerd
+USER nerd:nerd
+WORKDIR /home/nerd
+
+CMD ["/bin/sh"]
