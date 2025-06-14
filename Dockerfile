@@ -31,8 +31,9 @@ RUN cd $(mktemp -d) && \
 FROM docker.io/library/alpine:3
 
 COPY --from=wget /usr/local/bin /usr/local/bin/
+COPY --from=wget --chown=65534:65534 --chmod=700 /var/empty /home/nobody/
 
 USER 65534:65534
-WORKDIR /tmp
+ENV HOME="/home/nobody"
 
 CMD ["/bin/sh"]
